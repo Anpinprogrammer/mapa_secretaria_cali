@@ -1,0 +1,376 @@
+{
+"records": [
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "Bienestar Social: Programa Familia y Niñez-Consejos Consultivos"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 5,
+"aliado": "CEPE (Comunidad de Empresarios por la Educación)."
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "INSPECCION Y VIGILANCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "INSPECCION Y VIGILANCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 7,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 7,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 8,
+"aliado": "FUNDACION UNICO"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 7,
+"aliado": "FUNDACION UNICO"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 7,
+"aliado": "ICBF"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 21,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 7,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 4,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Nororiente",
+"comunaNumero": 6,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 19,
+"aliado": "FUNDACION SCARPETTA GNECCO. (Colocar número de tel del aliado)."
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 65,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 58,
+"aliado": "FUNDMPRO"
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 2,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 1,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 3,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Norte",
+"comunaNumero": 59,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 9,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 8,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 8,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 8,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 9,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 12,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 12,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 8,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 9,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Centro",
+"comunaNumero": 8,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 11,
+"aliado": "Bienestar Social: Programa Familia y Niñez-Consejos Consultivos"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 12,
+"aliado": "Bienestar Social: Programa Familia y Niñez-Consejos Consultivos"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 12,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 11,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 11,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 15,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 12,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 15,
+"aliado": "CASA JUSTICIA AGUABLANCA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 10,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 15,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 11,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 10,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 16,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Suroriente",
+"comunaNumero": 10,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "CEPE (Comunidad de Empresarios por la Educación)."
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 14,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 14,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 21,
+"aliado": "CASA DE JUSTICIA DE LOS MANGOS"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "PROPACÍFICO"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 14,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 14,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Oriente",
+"comunaNumero": 13,
+"aliado": "SALUD"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 53,
+"aliado": "Bienestar Social: Programa Familia y Niñez-Consejos Consultivos"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 54,
+"aliado": "Bienestar Social: Programa Familia y Niñez-Consejos Consultivos"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 17,
+"aliado": "FUNDACION SCARPETTA GNECCO."
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 53,
+"aliado": "FUNDMPRO"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 56,
+"aliado": "FUNDMPRO"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 57,
+"aliado": "FUNDMPRO"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 18,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 20,
+"aliado": "PAZ Y CULTURA CIUDADANA"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 18,
+"aliado": "FUTURO COLOMBIA"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 22,
+"aliado": "POLICIA INFANCIA Y ADOLESCENCIA"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 51,
+"aliado": "DEPORTE"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 20,
+"aliado": "SEGURIDAD Y JUSTCIA"
+},
+{
+"zona": "Zona Sur",
+"comunaNumero": 51,
+"aliado": "SALUD"
+}
+],
+"acciones": {
+"Zona Nororiente": "🚨 En el marco de la emergencia, se desarrollaron acciones orientadas al fortalecimiento de las capacidades socioemocionales de la comunidad educativa:\n\n🧠 Manejo de emociones y toma de decisiones, mediante estrategias socioemocionales para el fortalecimiento de capacidades.\n\n👩‍🏫 Formación docente, orientada al fortalecimiento de habilidades socioemocionales en la escuela.",
+"Zona Norte": "🚨 En el marco de la emergencia, se desarrollaron acciones orientadas al fortalecimiento de las capacidades socioemocionales de la comunidad educativa:\n\n🧠 Manejo de emociones y toma de decisiones, mediante estrategias socioemocionales para el fortalecimiento de capacidades.\n\n👩‍🏫 Formación docente, orientada al fortalecimiento de habilidades socioemocionales en la escuela.",
+"Zona Suroriente": "🚨 En el marco de la emergencia, se desarrollaron acciones orientadas al fortalecimiento de las capacidades socioemocionales de la comunidad educativa:\n\n🧠 Manejo de emociones y toma de decisiones, mediante estrategias socioemocionales para el fortalecimiento de capacidades.\n\n👩‍🏫 Formación docente, orientada al fortalecimiento de habilidades socioemocionales en la escuela.",
+"Zona Oriente": "🚨 En el marco de la emergencia, se desarrollaron acciones orientadas al fortalecimiento de las capacidades socioemocionales de la comunidad educativa:\n\n🧠 Manejo de emociones y toma de decisiones, mediante estrategias socioemocionales para el fortalecimiento de capacidades.\n\n👩‍🏫 Formación docente, orientada al fortalecimiento de habilidades socioemocionales en la escuela.",
+"Zona Sur": "🚨 En el marco de la emergencia, se desarrollaron acciones orientadas al fortalecimiento de las capacidades socioemocionales de la comunidad educativa:\n\n🧠 Manejo de emociones y toma de decisiones, mediante estrategias socioemocionales para el fortalecimiento de capacidades.\n\n👩‍🏫 Formación docente, orientada al fortalecimiento de habilidades socioemocionales en la escuela."
+}
+}
