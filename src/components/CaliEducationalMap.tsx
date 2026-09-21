@@ -41,7 +41,7 @@ interface CaliEducationalMapProps {
 
 export default function CaliEducationalMap({
   initialData,
-  defaultDatasetLabel = 'INFORMACION DE ALIADOS POR ZONA EDUCATIVA.xlsx (hoja "Copia de ZONAS")',
+  defaultDatasetLabel = 'INFORMACION DE ALIADOS POR ZONA EDUCATIVA',
   sheetCsvUrl = GOOGLE_SHEET_CSV_URL,
 }: CaliEducationalMapProps) {
   const initial = initialData ?? buildDefaultDataset();
