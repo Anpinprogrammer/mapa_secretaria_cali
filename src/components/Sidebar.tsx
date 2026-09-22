@@ -129,25 +129,6 @@ export function Sidebar({
       </div>
 
       <div className="mt-auto flex flex-col gap-2 border-t border-slate-200/70 pt-4 dark:border-slate-700/70">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".xlsx,.xls"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) onCargarExcel(file);
-            e.target.value = '';
-          }}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={cargando}
-          className="flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-60"
-        >
-          <Upload size={15} />
-          {cargando ? 'Cargando…' : 'Cargar nuevo Excel'}
-        </button>
         <button
           onClick={onActualizar}
           disabled={actualizando}
