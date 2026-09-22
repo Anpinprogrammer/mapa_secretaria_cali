@@ -28,7 +28,7 @@ export function FaseAtencionPanel() {
         aria-expanded={open}
       >
         <AlertTriangle size={13} />
-        Fase de Atención
+        1. Fase de Atención Inmediata
         {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
       </button>
 
