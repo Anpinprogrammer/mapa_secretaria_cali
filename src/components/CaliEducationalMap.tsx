@@ -51,14 +51,22 @@ export default function CaliEducationalMap({
     records: fallback.records,
     accionesPorZona: (fallback as ParsedSheetResult).accionesPorZona ?? {},
   };
+  const initialOrigen: 'embebido' | 'excel-manual' | 'google-sheets' = !cached
+    ? 'embebido'
+    : cached.datasetLabel === 'Google Sheets (en vivo)'
+    ? 'google-sheets'
+    : 'excel-manual';
+
   const [records, setRecords] = useState<AllyRecord[]>(initial.records);
   const [accionesPorZona, setAccionesPorZona] = useState(initial.accionesPorZona);
   const [datasetLabel, setDatasetLabel] = useState(cached?.datasetLabel ?? defaultDatasetLabel);
   const [cargando, setCargando] = useState(false);
   const [actualizando, setActualizando] = useState(false);
+  const [sincronizandoInicial, setSincronizandoInicial] = useState(!!sheetCsvUrl && !initialData);
   const [ultimaActualizacion, setUltimaActualizacion] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [usandoDatosGuardados, setUsandoDatosGuardados] = useState<boolean>(!!cached);
+  /** De dónde viene lo que se está mostrando ahora mismo, para el aviso del sidebar */
+  const [origenDatos, setOrigenDatos] = useState<'embebido' | 'excel-manual' | 'google-sheets'>(initialOrigen);
 
   const [zonaFiltro, setZonaFiltro] = useState<ZonaKey | 'Todas'>('Todas');
   const [aliadoFiltro, setAliadoFiltro] = useState<string | 'Todos'>('Todos');
@@ -144,7 +152,7 @@ export default function CaliEducationalMap({
       setAccionesPorZona(parsed.accionesPorZona);
       setDatasetLabel(file.name);
       setSelected(null);
-      setUsandoDatosGuardados(true);
+      setOrigenDatos('excel-manual');
       saveDatasetToLocalCache({
         records: parsed.records,
         accionesPorZona: parsed.accionesPorZona,
@@ -168,55 +176,85 @@ export default function CaliEducationalMap({
     setSelected(null);
   };
 
-  /** Descarta el dataset guardado en este navegador y vuelve al Excel original embebido en la app. */
+  /** Descarta cualquier dataset local/en vivo y vuelve al Excel original embebido en la app. */
   const handleRestablecerDatos = () => {
     clearDatasetLocalCache();
     const original = buildDefaultDataset();
     setRecords(original.records);
     setAccionesPorZona(original.accionesPorZona);
     setDatasetLabel(defaultDatasetLabel);
-    setUsandoDatosGuardados(false);
+    setOrigenDatos('embebido');
     setUltimaActualizacion(null);
     setSelected(null);
     setError(null);
   };
 
-  const handleActualizar = async () => {
-    if (!sheetCsvUrl) {
-      setError(
-        'No hay una hoja de Google Sheets configurada todavía. Define la URL de exportación CSV ' +
-          '(prop "sheetCsvUrl" o variable de entorno VITE_SHEET_CSV_URL) para poder actualizar desde ahí.'
-      );
-      return;
-    }
-    setActualizando(true);
-    setError(null);
-    try {
-      const parsed = await fetchRecordsFromSheetUrl(sheetCsvUrl);
-      setRecords(parsed.records);
-      setAccionesPorZona(parsed.accionesPorZona);
-      setDatasetLabel('Google Sheets (en vivo)');
-      setSelected(null);
-      const ahora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-      setUltimaActualizacion(ahora);
-      setUsandoDatosGuardados(true);
-      saveDatasetToLocalCache({
-        records: parsed.records,
-        accionesPorZona: parsed.accionesPorZona,
-        datasetLabel: 'Google Sheets (en vivo)',
-      });
-    } catch (e) {
-      setError(
-        e instanceof SheetFetchError
-          ? e.message
-          : e instanceof ExcelFormatError
-          ? e.message
-          : 'No se pudo actualizar desde Google Sheets. Intenta de nuevo en unos segundos.'
-      );
-    } finally {
-      setActualizando(false);
-    }
-  };
+  /**
+   * Trae la información más reciente de Google Sheets. `silent=true` se usa
+   * en la sincronización automática al abrir la página: si falla, no se
+   * pisa lo que ya se estaba mostrando (caché local o dataset embebido) y el
+   * mensaje de error es más suave, porque no fue una acción del usuario.
+   */
+  const sincronizarConSheet = useCallback(
+    async (opts: { silent?: boolean } = {}) => {
+      if (!sheetCsvUrl) {
+        if (!opts.silent) {
+          setError(
+            'No hay una hoja de Google Sheets configurada todavía. Define la URL de exportación CSV ' +
+              '(prop "sheetCsvUrl" o variable de entorno VITE_SHEET_CSV_URL) para poder actualizar desde ahí.'
+          );
+        }
+        return;
+      }
+      if (opts.silent) setSincronizandoInicial(true);
+      else setActualizando(true);
+      setError(null);
+      try {
+        const parsed = await fetchRecordsFromSheetUrl(sheetCsvUrl);
+        setRecords(parsed.records);
+        setAccionesPorZona(parsed.accionesPorZona);
+        setDatasetLabel('Google Sheets (en vivo)');
+        setSelected(null);
+        const ahora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        setUltimaActualizacion(ahora);
+        setOrigenDatos('google-sheets');
+        saveDatasetToLocalCache({
+          records: parsed.records,
+          accionesPorZona: parsed.accionesPorZona,
+          datasetLabel: 'Google Sheets (en vivo)',
+        });
+      } catch (e) {
+        const msg =
+          e instanceof SheetFetchError || e instanceof ExcelFormatError
+            ? e.message
+            : 'No se pudo actualizar desde Google Sheets. Intenta de nuevo en unos segundos.';
+        setError(
+          opts.silent
+            ? `No se pudo sincronizar automáticamente con Google Sheets al abrir la página (mostrando la última versión disponible). ${msg}`
+            : msg
+        );
+      } finally {
+        if (opts.silent) setSincronizandoInicial(false);
+        else setActualizando(false);
+      }
+    },
+    [sheetCsvUrl]
+  );
+
+  const handleActualizar = () => sincronizarConSheet({ silent: false });
+
+  // Sincronización automática con Google Sheets al abrir la página, para que
+  // todos los que visitan el sitio vean siempre la data más reciente sin
+  // tener que presionar "Actualizar" a mano. Corre una sola vez al montar.
+  const autoSyncedRef = useRef(false);
+  useEffect(() => {
+    if (autoSyncedRef.current) return;
+    autoSyncedRef.current = true;
+    if (initialData) return; // si el embebedor ya pasó datos explícitos, respétalos
+    if (!sheetCsvUrl) return;
+    sincronizarConSheet({ silent: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectedGeometry = useMemo(
     () => (selected ? ZONA_GEOMETRY.find((z) => z.zona === selected) : undefined),
@@ -272,9 +310,9 @@ export default function CaliEducationalMap({
             onRestablecerDatos={handleRestablecerDatos}
             totalRegistros={records.length}
             cargando={cargando}
-            actualizando={actualizando}
+            actualizando={actualizando || sincronizandoInicial}
             ultimaActualizacion={ultimaActualizacion}
-            usandoDatosGuardados={usandoDatosGuardados}
+            origenDatos={origenDatos}
             error={error}
           />
         </div>

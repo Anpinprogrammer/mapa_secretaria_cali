@@ -131,14 +131,42 @@ tienen datos propios independientes).
   volver a subir el Excel a mano. Ver la sección siguiente para configurarlo.
 - Botón "Restablecer filtros".
 
-## Configurar el botón "Actualizar" (Google Sheets)
+## Sincronización con Google Sheets (automática al abrir la página)
 
-El botón "Actualizar" del sidebar necesita la URL de exportación CSV de tu
-hoja de Google Sheets:
+Si `VITE_SHEET_CSV_URL` está configurada (ver la sección siguiente), la app
+**se sincroniza sola con Google Sheets apenas se abre la página** — no hace
+falta que nadie presione ningún botón para ver la información más reciente.
+Así cualquier persona que entre al sitio, desde cualquier navegador o
+dispositivo, ve siempre lo último que haya en la hoja.
+
+- El botón **"Actualizar"** sigue existiendo para forzar una re-sincronización
+  manual en el momento (por ejemplo, justo después de editar la hoja, sin
+  tener que recargar la página).
+- Si la sincronización automática falla (sin internet, la hoja se dejó de
+  compartir, etc.), la app no se queda en blanco: muestra la última versión
+  que tenga guardada en el `localStorage` de ese navegador, o si no hay
+  ninguna, el Excel original embebido en el build — y avisa en el sidebar que
+  la sincronización automática falló, con la opción de reintentar con
+  "Actualizar".
+- El sidebar muestra de dónde viene lo que se está mostrando:
+  **"Sincronizado con Google Sheets"** (dato en vivo), **"Excel cargado
+  manualmente"** (usaste el botón "Cargar nuevo Excel" en este navegador), o
+  nada (estás viendo el Excel original embebido, sin ninguna hoja
+  configurada). El enlace "Restablecer al Excel original" descarta cualquiera
+  de los dos primeros casos.
+- "Cargar nuevo Excel" sigue sirviendo para previsualizar un archivo propio
+  sin tocar la hoja compartida — pero ten en cuenta que la **próxima vez que
+  alguien abra la página, la sincronización automática con Sheets la va a
+  reemplazar** (Sheets manda como fuente de verdad al cargar).
+
+## Configurar la hoja de Google Sheets
+
+El auto-sync y el botón "Actualizar" necesitan la URL de exportación CSV de
+tu hoja de Google Sheets:
 
 1. Abre la hoja en Google Sheets.
 2. **Compartir** → Acceso general → "Cualquiera con el enlace" → Lector.
-   (Sin este paso, Google bloqueará la descarga y el botón mostrará un error.)
+   (Sin este paso, Google bloqueará la descarga y la app mostrará un error.)
 3. En la URL del navegador verás algo como
    `https://docs.google.com/spreadsheets/d/1AbCdEfG.../edit#gid=123456789`.
    El texto entre `/d/` y `/edit` es el **ID** de la hoja; el número después
@@ -148,13 +176,18 @@ hoja de Google Sheets:
 5. Copia `.env.example` a `.env` en la raíz del proyecto y pega esa URL en
    `VITE_SHEET_CSV_URL`. También puedes pasarla directamente como prop:
    `<CaliEducationalMap sheetCsvUrl="https://docs.google.com/..." />`.
+   **En Vercel**: agrégala en Project Settings → Environment Variables con el
+   mismo nombre, y vuelve a desplegar para que quede incluida en el build.
 
-La hoja debe tener las mismas columnas que el Excel (`ZONA`, `COMUNA`,
-`ALIADOS` y, sin encabezado, el mensaje de acciones desarrolladas); el mismo
-parser que lee el Excel se usa para interpretar el CSV, buscando primero una
-pestaña llamada "Copia de ZONAS" o "ZONAS". Si no se configura ninguna URL,
-el botón "Actualizar" muestra un mensaje explicando qué falta en vez de
-fallar en silencio.
+Importante: Google exporta **una sola pestaña por URL** (la del `gid` que
+pusiste), no el libro completo — así que el nombre "Copia de ZONAS" no aplica
+al CSV de Sheets, solo al detectar la pestaña dentro de un archivo `.xlsx`
+subido con "Cargar nuevo Excel". La pestaña de Sheets que uses debe tener las
+mismas columnas que esa hoja (`ZONA`, `COMUNA`, `ALIADOS` y, sin encabezado,
+el mensaje de acciones desarrolladas). Si no se configura ninguna URL, tanto
+el auto-sync como el botón "Actualizar" no hacen nada dañino: simplemente no
+hay sincronización, y "Actualizar" explica qué falta en vez de fallar en
+silencio.
 
 ## Estructura de archivos
 

@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
-import { Search, Upload, RefreshCw, RotateCcw, Save } from 'lucide-react';
+import { Search, Upload, RefreshCw, RotateCcw, Radio, Save } from 'lucide-react';
 import { ZONA_ORDER } from '../data/zonasComunas';
 import { ZonaKey } from '../types';
+
+type OrigenDatos = 'embebido' | 'excel-manual' | 'google-sheets';
 
 interface SidebarProps {
   zonaFiltro: ZonaKey | 'Todas';
@@ -19,7 +21,7 @@ interface SidebarProps {
   cargando?: boolean;
   actualizando?: boolean;
   ultimaActualizacion?: string | null;
-  usandoDatosGuardados?: boolean;
+  origenDatos?: OrigenDatos;
   error?: string | null;
 }
 
@@ -39,7 +41,7 @@ export function Sidebar({
   cargando,
   actualizando,
   ultimaActualizacion,
-  usandoDatosGuardados,
+  origenDatos = 'embebido',
   error,
 }: SidebarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -53,9 +55,14 @@ export function Sidebar({
 
       <div className="rounded-xl bg-slate-100/80 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
         {totalRegistros} registro(s) cargados
-        {usandoDatosGuardados && (
+        {origenDatos === 'google-sheets' && (
           <span className="mt-1 flex items-center gap-1 text-[11px] text-emerald-600">
-            <Save size={12} /> Guardado en este navegador
+            <Radio size={12} /> Sincronizado con Google Sheets
+          </span>
+        )}
+        {origenDatos === 'excel-manual' && (
+          <span className="mt-1 flex items-center gap-1 text-[11px] text-amber-600">
+            <Save size={12} /> Excel cargado manualmente (este navegador)
           </span>
         )}
       </div>
@@ -122,9 +129,6 @@ export function Sidebar({
       </div>
 
       <div className="mt-auto flex flex-col gap-2 border-t border-slate-200/70 pt-4 dark:border-slate-700/70">
-        {/**
-         * 
-         
         <input
           ref={fileInputRef}
           type="file"
@@ -144,21 +148,20 @@ export function Sidebar({
           <Upload size={15} />
           {cargando ? 'Cargando…' : 'Cargar nuevo Excel'}
         </button>
-        */}
         <button
           onClick={onActualizar}
           disabled={actualizando}
           className="flex items-center justify-center gap-2 rounded-lg border border-slate-300/70 bg-white/70 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-white disabled:opacity-60 dark:border-slate-600/70 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:bg-slate-800"
         >
           <RefreshCw size={15} className={actualizando ? 'animate-spin' : ''} />
-          {actualizando ? 'Actualizando…' : 'Actualizar'}
+          {actualizando ? 'Sincronizando…' : 'Actualizar'}
         </button>
         {ultimaActualizacion && (
           <p className="text-center text-[11px] text-slate-400">
-            Última actualización: {ultimaActualizacion}
+            Última sincronización: {ultimaActualizacion}
           </p>
         )}
-        {usandoDatosGuardados && (
+        {origenDatos !== 'embebido' && (
           <button
             onClick={onRestablecerDatos}
             className="text-center text-[11px] text-slate-400 underline decoration-dotted transition hover:text-slate-600"
