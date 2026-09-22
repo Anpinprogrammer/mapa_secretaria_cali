@@ -35,48 +35,62 @@ export const ZONA_ORDER: ZonaKey[] = [
 ];
 
 /**
- * Colores de badges por entidad aliada. El Excel real trae texto libre
- * ("Bienestar Social: Programa Familia y Niñez...", "POLICIA INFANCIA Y
- * ADOLESCENCIA", "FUNDACION SCARPETTA GNECCO.", etc.), así que el color se
- * asigna por coincidencia de palabra clave (insensible a tildes/mayúsculas),
- * no por texto exacto. Lo que no matchea ninguna categoría puntual se trata
- * como "Fundaciones / Aliados" (la mayoría son fundaciones o empresas).
+ * Colores de badges por entidad aliada.
+ * ------------------------------------------------------------------
+ * El filtro de "Aliado" del sidebar y la leyenda de "Entidades aliadas"
+ * DEBEN mostrar exactamente el mismo listado (el usuario lo pidió
+ * explícitamente), así que el color ya no se asigna por categoría fija ni
+ * por palabra clave: se reparte un color distinto de esta paleta a cada
+ * nombre de aliado que exista realmente en los datos cargados, en el mismo
+ * orden (alfabético) en que aparecen en el filtro. Así, sin importar qué
+ * traiga el próximo Excel, cualquier aliado nuevo queda incluido
+ * automáticamente tanto en el filtro como en la leyenda, con su propio color.
  */
-const ALIADO_KEYWORDS: Array<{ keys: string[]; color: string }> = [
-  { keys: ['salud'], color: '#EF4444' },
-  { keys: ['policia'], color: '#1E3A8A' },
-  { keys: ['icbf'], color: '#F97316' },
-  { keys: ['bienestar social'], color: '#7C3AED' },
-  { keys: ['paz y cultura'], color: '#D946EF' },
-  { keys: ['deporte'], color: '#EAB308' },
-  { keys: ['seguridad y just', 'casa de justicia', 'casa justicia'], color: '#0891B2' },
-  { keys: ['inspeccion y vigilancia'], color: '#64748B' },
+const ALIADO_PALETTE: string[] = [
+  '#EF4444', '#F97316', '#F59E0B', '#EAB308', '#84CC16', '#22C55E',
+  '#10B981', '#14B8A6', '#06B6D4', '#0EA5E9', '#3B82F6', '#6366F1',
+  '#8B5CF6', '#A855F7', '#D946EF', '#EC4899', '#F43F5E', '#7C3AED',
+  '#0891B2', '#65A30D', '#DC2626', '#DB2777', '#9333EA', '#0D9488',
 ];
 
-export const ALIADO_COLOR_DEFAULT = '#16A34A'; // Fundaciones / empresas / aliados generales
+export const ALIADO_COLOR_DEFAULT = '#64748B';
 
 function stripAccents(s: string): string {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-export function colorForAliado(nombre: string): string {
-  const norm = stripAccents(nombre.toLowerCase());
-  for (const { keys, color } of ALIADO_KEYWORDS) {
-    if (keys.some((k) => norm.includes(k))) return color;
-  }
-  return ALIADO_COLOR_DEFAULT;
+function normalizeAliadoKey(nombre: string): string {
+  return stripAccents(nombre.trim().toLowerCase());
 }
 
-export const ALIADO_LEGEND_ITEMS: Array<{ label: string; color: string }> = [
-  { label: 'Salud', color: '#EF4444' },
-  { label: 'Policía', color: '#1E3A8A' },
-  { label: 'ICBF', color: '#F97316' },
-  { label: 'Bienestar Social', color: '#7C3AED' },
-  { label: 'Paz y Cultura', color: '#D946EF' },
-  { label: 'Deporte', color: '#EAB308' },
-  { label: 'Seguridad y Justicia', color: '#0891B2' },
-  { label: 'Fundaciones / Aliados', color: ALIADO_COLOR_DEFAULT },
-];
+/**
+ * Construye el color de cada aliado a partir de la lista COMPLETA de
+ * aliados disponibles (la misma que llena el filtro del sidebar), para que
+ * no haya dos aliados distintos con el mismo color mientras alcance la
+ * paleta. Se ordena alfabéticamente primero para que la asignación sea
+ * estable entre re-renders con la misma lista de datos.
+ */
+export function buildAliadoColorMap(aliados: string[]): Map<string, string> {
+  const unicos = Array.from(new Set(aliados.map((a) => a.trim()))).sort((a, b) =>
+    normalizeAliadoKey(a).localeCompare(normalizeAliadoKey(b))
+  );
+  const map = new Map<string, string>();
+  unicos.forEach((nombre, i) => {
+    map.set(nombre, ALIADO_PALETTE[i % ALIADO_PALETTE.length]);
+  });
+  return map;
+}
+
+/** Color de respaldo cuando se pinta un badge sin tener a mano el mapa
+ *  completo de colores (debería ser la excepción, no la regla). */
+export function colorForAliado(nombre: string): string {
+  const norm = normalizeAliadoKey(nombre);
+  let hash = 0;
+  for (let i = 0; i < norm.length; i++) {
+    hash = (hash * 31 + norm.charCodeAt(i)) >>> 0;
+  }
+  return ALIADO_PALETTE[hash % ALIADO_PALETTE.length] ?? ALIADO_COLOR_DEFAULT;
+}
 
 const ZONA_PATHS: Record<ZonaKey, string> = {
   'Zona Norte': 'M 411.0,55.0 L 370.0,70.0 L 360.0,85.0 L 285.0,56.0 L 281.0,80.0 L 247.0,81.0 L 242.0,87.0 L 283.0,131.0 L 262.0,190.0 L 240.0,188.0 L 218.0,230.0 L 151.0,196.0 L 132.0,229.0 L 101.0,226.0 L 85.0,211.0 L 56.0,219.0 L 15.0,184.0 L 50.0,220.0 L 50.0,236.0 L 73.0,252.0 L 161.0,262.0 L 182.0,290.0 L 163.0,311.0 L 172.0,346.0 L 190.0,341.0 L 172.0,401.0 L 124.0,416.0 L 127.0,433.0 L 153.0,409.0 L 167.0,416.0 L 162.0,478.0 L 207.0,472.0 L 208.0,458.0 L 227.0,452.0 L 258.0,359.0 L 285.0,327.0 L 260.0,320.0 L 242.0,299.0 L 261.0,284.0 L 293.0,281.0 L 285.0,252.0 L 321.0,238.0 L 313.0,201.0 L 362.0,125.0 L 385.0,112.0 Z',

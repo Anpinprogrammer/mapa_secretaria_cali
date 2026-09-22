@@ -14,6 +14,9 @@ interface ZonaPopupProps {
   zona: ZonaKey;
   aggregate: ZonaAggregate | undefined;
   anchor: PopupAnchor | null;
+  /** Mapa nombre → color, construido a partir de TODOS los aliados disponibles
+   *  (el mismo que llena el filtro del sidebar y la leyenda) */
+  aliadoColorMap: Map<string, string>;
   /** Alto fijo (px) de la burbuja; el contenido interno hace scroll si no cabe */
   height?: number;
   onClose: () => void;
@@ -26,7 +29,7 @@ type Tab = 'aliados' | 'acciones';
  *  siempre son visibles; solo el cuerpo de cada pestaña hace scroll interno.
  *  ARRASTRABLE: se puede mover tomándola por el encabezado (o el "agarre" con
  *  puntitos), para destapar el mapa debajo sin tener que cerrarla. */
-export function ZonaPopup({ zona, aggregate, anchor, height = 380, onClose }: ZonaPopupProps) {
+export function ZonaPopup({ zona, aggregate, anchor, aliadoColorMap, height = 380, onClose }: ZonaPopupProps) {
   const [tab, setTab] = useState<Tab>('aliados');
   const zonaColor = ZONA_COLORS[zona];
   const placement = anchor?.placement ?? 'above';
@@ -151,7 +154,7 @@ export function ZonaPopup({ zona, aggregate, anchor, height = 380, onClose }: Zo
           <div className="space-y-2">
             {grupos.map(({ aliado, comunas }) => (
               <div key={aliado} className="rounded-lg border border-slate-200/70 p-2">
-                <AllyBadge nombre={aliado} />
+                <AllyBadge nombre={aliado} color={aliadoColorMap.get(aliado)} />
                 {comunas.length > 0 && (
                   <p className="mt-1.5 text-[11px] text-slate-500">
                     {comunas.length === 1 ? 'Comuna' : 'Comunas'}:{' '}

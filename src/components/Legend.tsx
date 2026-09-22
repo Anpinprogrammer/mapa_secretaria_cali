@@ -1,8 +1,17 @@
 import React from 'react';
-import { ZONA_COLORS, ZONA_ORDER, ALIADO_LEGEND_ITEMS } from '../data/zonasComunas';
+import { ZONA_COLORS, ZONA_ORDER } from '../data/zonasComunas';
 
-/** Leyenda fija de zonas educativas (color de fondo) y entidades aliadas (color de badge) */
-export function Legend() {
+interface LegendProps {
+  /** Mismo listado (y mismo orden) que llena el filtro "Aliado / Entidad" del sidebar */
+  aliados: string[];
+  /** Mapa nombre → color, construido a partir de ese mismo listado */
+  aliadoColorMap: Map<string, string>;
+}
+
+/** Leyenda de zonas educativas (color de fondo) y entidades aliadas (color de badge).
+ *  El listado de aliados es exactamente el mismo que el filtro del sidebar: se
+ *  recibe como prop en vez de estar fijo, para incluir siempre a todos. */
+export function Legend({ aliados, aliadoColorMap }: LegendProps) {
   return (
     <div className="space-y-4 rounded-2xl border border-white/20 bg-white/60 p-4 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-slate-900/50">
       <div>
@@ -26,13 +35,14 @@ export function Legend() {
           Entidades aliadas
         </h3>
         <ul className="flex flex-wrap gap-1.5">
-          {ALIADO_LEGEND_ITEMS.map(({ label, color }) => (
+          {aliados.map((nombre) => (
             <li
-              key={label}
+              key={nombre}
               className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
-              style={{ backgroundColor: color }}
+              style={{ backgroundColor: aliadoColorMap.get(nombre) }}
+              title={nombre}
             >
-              {label}
+              {nombre}
             </li>
           ))}
         </ul>

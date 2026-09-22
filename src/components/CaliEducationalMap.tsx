@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { AllyRecord, ZonaKey } from '../types';
-import { ZONA_GEOMETRY, COMUNA_LABELS, RURAL_PINS, VIEWBOX, ZONA_COLORS } from '../data/zonasComunas';
+import { ZONA_GEOMETRY, COMUNA_LABELS, RURAL_PINS, VIEWBOX, ZONA_COLORS, buildAliadoColorMap } from '../data/zonasComunas';
 import {
   aggregateByZona,
   buildDefaultDataset,
@@ -11,6 +11,7 @@ import {
   SheetFetchError,
   ParsedSheetResult,
 } from '../utils/excelParser';
+import { saveDatasetToLocalCache, loadDatasetFromLocalCache, clearDatasetLocalCache } from '../utils/localCache';
 import { Sidebar } from './Sidebar';
 import { ZonaPopup } from './ZonaPopup';
 import { Legend } from './Legend';
@@ -41,17 +42,23 @@ interface CaliEducationalMapProps {
 
 export default function CaliEducationalMap({
   initialData,
-  defaultDatasetLabel = 'INFORMACION DE ALIADOS POR ZONA EDUCATIVA',
+  defaultDatasetLabel = 'INFORMACION DE ALIADOS POR ZONA EDUCATIVA.xlsx (hoja "Copia de ZONAS")',
   sheetCsvUrl = GOOGLE_SHEET_CSV_URL,
 }: CaliEducationalMapProps) {
-  const initial = initialData ?? buildDefaultDataset();
+  const cached = initialData ? null : loadDatasetFromLocalCache();
+  const fallback = initialData ?? cached ?? buildDefaultDataset();
+  const initial: ParsedSheetResult = {
+    records: fallback.records,
+    accionesPorZona: (fallback as ParsedSheetResult).accionesPorZona ?? {},
+  };
   const [records, setRecords] = useState<AllyRecord[]>(initial.records);
   const [accionesPorZona, setAccionesPorZona] = useState(initial.accionesPorZona);
-  const [datasetLabel, setDatasetLabel] = useState(defaultDatasetLabel);
+  const [datasetLabel, setDatasetLabel] = useState(cached?.datasetLabel ?? defaultDatasetLabel);
   const [cargando, setCargando] = useState(false);
   const [actualizando, setActualizando] = useState(false);
   const [ultimaActualizacion, setUltimaActualizacion] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [usandoDatosGuardados, setUsandoDatosGuardados] = useState<boolean>(!!cached);
 
   const [zonaFiltro, setZonaFiltro] = useState<ZonaKey | 'Todas'>('Todas');
   const [aliadoFiltro, setAliadoFiltro] = useState<string | 'Todos'>('Todos');
@@ -111,6 +118,11 @@ export default function CaliEducationalMap({
     return Array.from(set).sort();
   }, [records]);
 
+  // Un color por aliado, calculado sobre TODOS los aliados disponibles (no por
+  // categoría), para que el filtro del sidebar y la leyenda muestren siempre
+  // el mismo listado con los mismos colores.
+  const aliadoColorMap = useMemo(() => buildAliadoColorMap(aliadosDisponibles), [aliadosDisponibles]);
+
   const isZonaActive = useCallback(
     (zona: ZonaKey) => {
       if (zonaFiltro !== 'Todas' && zona !== zonaFiltro) return false;
@@ -132,6 +144,12 @@ export default function CaliEducationalMap({
       setAccionesPorZona(parsed.accionesPorZona);
       setDatasetLabel(file.name);
       setSelected(null);
+      setUsandoDatosGuardados(true);
+      saveDatasetToLocalCache({
+        records: parsed.records,
+        accionesPorZona: parsed.accionesPorZona,
+        datasetLabel: file.name,
+      });
     } catch (e) {
       setError(
         e instanceof ExcelFormatError
@@ -150,6 +168,19 @@ export default function CaliEducationalMap({
     setSelected(null);
   };
 
+  /** Descarta el dataset guardado en este navegador y vuelve al Excel original embebido en la app. */
+  const handleRestablecerDatos = () => {
+    clearDatasetLocalCache();
+    const original = buildDefaultDataset();
+    setRecords(original.records);
+    setAccionesPorZona(original.accionesPorZona);
+    setDatasetLabel(defaultDatasetLabel);
+    setUsandoDatosGuardados(false);
+    setUltimaActualizacion(null);
+    setSelected(null);
+    setError(null);
+  };
+
   const handleActualizar = async () => {
     if (!sheetCsvUrl) {
       setError(
@@ -166,9 +197,14 @@ export default function CaliEducationalMap({
       setAccionesPorZona(parsed.accionesPorZona);
       setDatasetLabel('Google Sheets (en vivo)');
       setSelected(null);
-      setUltimaActualizacion(
-        new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })
-      );
+      const ahora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+      setUltimaActualizacion(ahora);
+      setUsandoDatosGuardados(true);
+      saveDatasetToLocalCache({
+        records: parsed.records,
+        accionesPorZona: parsed.accionesPorZona,
+        datasetLabel: 'Google Sheets (en vivo)',
+      });
     } catch (e) {
       setError(
         e instanceof SheetFetchError
@@ -233,10 +269,12 @@ export default function CaliEducationalMap({
             onResetFiltros={handleResetFiltros}
             onCargarExcel={handleCargarExcel}
             onActualizar={handleActualizar}
+            onRestablecerDatos={handleRestablecerDatos}
             totalRegistros={records.length}
             cargando={cargando}
             actualizando={actualizando}
             ultimaActualizacion={ultimaActualizacion}
+            usandoDatosGuardados={usandoDatosGuardados}
             error={error}
           />
         </div>
@@ -349,6 +387,7 @@ export default function CaliEducationalMap({
                   zona={selected}
                   aggregate={aggregates.get(selected)}
                   anchor={selectedAnchor}
+                  aliadoColorMap={aliadoColorMap}
                   height={POPUP_HEIGHT}
                   onClose={() => setSelected(null)}
                 />
@@ -364,7 +403,7 @@ export default function CaliEducationalMap({
         </div>
 
         <div className="min-h-0 overflow-y-auto">
-          <Legend />
+          <Legend aliados={aliadosDisponibles} aliadoColorMap={aliadoColorMap} />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Search, Upload, RefreshCw, RotateCcw } from 'lucide-react';
+import { Search, Upload, RefreshCw, RotateCcw, Save } from 'lucide-react';
 import { ZONA_ORDER } from '../data/zonasComunas';
 import { ZonaKey } from '../types';
 
@@ -14,10 +14,12 @@ interface SidebarProps {
   onResetFiltros: () => void;
   onCargarExcel: (file: File) => void;
   onActualizar: () => void;
+  onRestablecerDatos: () => void;
   totalRegistros: number;
   cargando?: boolean;
   actualizando?: boolean;
   ultimaActualizacion?: string | null;
+  usandoDatosGuardados?: boolean;
   error?: string | null;
 }
 
@@ -32,10 +34,12 @@ export function Sidebar({
   onResetFiltros,
   onCargarExcel,
   onActualizar,
+  onRestablecerDatos,
   totalRegistros,
   cargando,
   actualizando,
   ultimaActualizacion,
+  usandoDatosGuardados,
   error,
 }: SidebarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,6 +53,11 @@ export function Sidebar({
 
       <div className="rounded-xl bg-slate-100/80 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
         {totalRegistros} registro(s) cargados
+        {usandoDatosGuardados && (
+          <span className="mt-1 flex items-center gap-1 text-[11px] text-emerald-600">
+            <Save size={12} /> Guardado en este navegador
+          </span>
+        )}
       </div>
 
       {error && (
@@ -113,9 +122,6 @@ export function Sidebar({
       </div>
 
       <div className="mt-auto flex flex-col gap-2 border-t border-slate-200/70 pt-4 dark:border-slate-700/70">
-      {/**
-       * 
-       
         <input
           ref={fileInputRef}
           type="file"
@@ -135,7 +141,6 @@ export function Sidebar({
           <Upload size={15} />
           {cargando ? 'Cargando…' : 'Cargar nuevo Excel'}
         </button>
-        */}
         <button
           onClick={onActualizar}
           disabled={actualizando}
@@ -148,6 +153,14 @@ export function Sidebar({
           <p className="text-center text-[11px] text-slate-400">
             Última actualización: {ultimaActualizacion}
           </p>
+        )}
+        {usandoDatosGuardados && (
+          <button
+            onClick={onRestablecerDatos}
+            className="text-center text-[11px] text-slate-400 underline decoration-dotted transition hover:text-slate-600"
+          >
+            Restablecer al Excel original
+          </button>
         )}
         <button
           onClick={onResetFiltros}
