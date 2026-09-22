@@ -9,7 +9,7 @@ import { AlertTriangle, ChevronDown, ChevronUp, X } from 'lucide-react';
 const LINEA_SED_ITEMS: Array<{ label: string; value: number }> = [
   { label: 'Directivos Docentes', value: 3 },
   { label: 'Docentes', value: 41 },
-  { label: 'Estudiantes con auto reporte o reportados por sus familias', value: 87 },
+  { label: 'Estudiantes con auto reporte o reportados por sus familias', value: 108 },
   { label: 'Funcionarios del nivel central SED', value: 2 },
   { label: 'Personal administrativo de IE', value: 1 },
   { label: 'Padres, madres, cuidadores o familias', value: 78 },
