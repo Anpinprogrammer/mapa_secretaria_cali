@@ -113,6 +113,9 @@ export function Sidebar({
       </div>
 
       <div className="mt-auto flex flex-col gap-2 border-t border-slate-200/70 pt-4 dark:border-slate-700/70">
+      {/**
+       * 
+       
         <input
           ref={fileInputRef}
           type="file"
@@ -132,6 +135,7 @@ export function Sidebar({
           <Upload size={15} />
           {cargando ? 'Cargando…' : 'Cargar nuevo Excel'}
         </button>
+        */}
         <button
           onClick={onActualizar}
           disabled={actualizando}
