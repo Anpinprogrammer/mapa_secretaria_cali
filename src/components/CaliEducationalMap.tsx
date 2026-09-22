@@ -15,6 +15,7 @@ import { saveDatasetToLocalCache, loadDatasetFromLocalCache, clearDatasetLocalCa
 import { Sidebar } from './Sidebar';
 import { ZonaPopup } from './ZonaPopup';
 import { Legend } from './Legend';
+import { FaseAtencionPanel } from './FaseAtencionPanel';
 
 const [VB_W, VB_H] = VIEWBOX.split(' ').slice(2).map(Number);
 const MAP_RATIO = VB_W / VB_H;
@@ -317,7 +318,8 @@ export default function CaliEducationalMap({
           />
         </div>
 
-        <div className="flex min-h-0 flex-col rounded-2xl border border-white/20 bg-white/60 p-3 shadow-sm backdrop-blur-md">
+        <div className="relative flex min-h-0 flex-col rounded-2xl border border-white/20 bg-white/60 p-3 shadow-sm backdrop-blur-md">
+          <FaseAtencionPanel />
           <div ref={mapWrapperRef} className="flex min-h-0 flex-1 items-center justify-center overflow-visible">
             <div
               ref={mapRef}
